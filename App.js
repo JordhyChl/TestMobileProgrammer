@@ -15,13 +15,14 @@ import UpdateCatatan from './Pages/UpdateUser';
 import ViewCatatan from './Pages/ViewUser';
 import ViewAllCatatan from './Pages/ViewAllUser';
 import DeleteCatatan from './Pages/DeleteUser';
+import Login from './Pages/LoginScreen';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
@@ -97,6 +98,20 @@ const App = () => {
           component={DeleteCatatan}
           options={{
             title: 'Delete User', //Set Header Title
+            headerStyle: {
+              backgroundColor: '#221eeb', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            title: 'Login', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },
