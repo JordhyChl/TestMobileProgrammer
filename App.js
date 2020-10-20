@@ -16,6 +16,8 @@ import ViewCatatan from './Pages/ViewUser';
 import ViewAllCatatan from './Pages/ViewAllUser';
 import DeleteCatatan from './Pages/DeleteUser';
 import Login from './Pages/LoginScreen';
+import RegisterScreen from './Pages/RegisterScreen';
+import AdminScreen from './Pages/AdminScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +32,9 @@ const App = () => {
             title: 'Home', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
+            },
+            headerLeft: () => {
+              return null;
             },
             headerTintColor: '#fff', //Set Header text color
             headerTitleStyle: {
@@ -112,6 +117,34 @@ const App = () => {
           component={Login}
           options={{
             title: 'Login', //Set Header Title
+            headerStyle: {
+              backgroundColor: '#221eeb', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },
+          }}
+        />
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
+          options={{
+            title: 'Register', //Set Header Title
+            headerStyle: {
+              backgroundColor: '#221eeb', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AdminScreen"
+          component={AdminScreen}
+          options={{
+            title: 'Admin Screen', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },

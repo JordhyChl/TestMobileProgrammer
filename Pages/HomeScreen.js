@@ -2,9 +2,9 @@
 //    www.edafait.com
 
 import React, { useEffect } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import Mybutton from './components/Mybutton';
-import Mytext from './components/Mytext';
+//import Mytext from './components/Mytext';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 var db = openDatabase({ name: 'UserDatabase.db' });
@@ -31,9 +31,8 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, marginTop: 200 }}>
         <View style={{ flex: 1 }}>
-          <Mytext text="SQLite Example Contact List" />
           <Mybutton
             title="New Contact"
             customClick={() => navigation.navigate('NewContact')}
@@ -54,10 +53,10 @@ const HomeScreen = ({ navigation }) => {
             title="Delete"
             customClick={() => navigation.navigate('Delete')}
           />
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={{ fontSize: 16, paddingTop: 60, textAlign: 'center', color: 'grey' }}>Log Out</Text>
+          </TouchableOpacity>
         </View>
-       <Text style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>
-          www.edafait.com
-        </Text>
       </View>
     </SafeAreaView>
   );

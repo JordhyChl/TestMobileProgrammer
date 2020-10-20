@@ -106,7 +106,7 @@ const UpdateCatatan = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, marginTop:100 }}>
         <View style={{ flex: 1 }}>
           <ScrollView keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView

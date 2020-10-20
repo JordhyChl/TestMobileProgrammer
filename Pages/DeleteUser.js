@@ -42,7 +42,7 @@ const DeleteCatatan = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, marginTop:200 }}>
         <View style={{ flex: 1 }}>
           <Mytextinput
             placeholder="Enter User Id"

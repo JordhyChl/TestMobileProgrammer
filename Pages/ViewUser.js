@@ -36,7 +36,7 @@ const ViewCatatan = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, marginTop:200 }}>
         <View style={{ flex: 1 }}>
           <Mytextinput
             placeholder="Enter User Id"
@@ -53,10 +53,6 @@ const ViewCatatan = () => {
             <Text>User Lampiran: {catatanData.catatan_lampiran}</Text>
           </View>
         </View>
-      
-        <Text style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>
-          www.edafait.com
-        </Text>
       </View>
     </SafeAreaView>
   );

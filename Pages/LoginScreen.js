@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import FloatingLabel from 'react-native-floating-labels';
 // import Mybutton from './components/Mybutton';
 // import Mytext from './components/Mytext';
 import SQLite from 'react-native-sqlite-storage';
 import Mytextinput from './components/Mytextinput';
+import PwdInput from './components/PwdInput';
 import Mybutton from './components/Mybutton';
 
 //import styles from './Login.component.style';
@@ -21,7 +22,7 @@ export default class Login extends Component {
     }
 
     componentDidMount() {
-        db = SQLite.openDatabase({ name: "dataDB", createFromLocation: "~data.db" },
+        db = SQLite.openDatabase({ name: "data.db", createFromLocation: 1 },
             this.openSuccess, this.openError);
     }
 
@@ -77,7 +78,8 @@ export default class Login extends Component {
         //     style: formInput
         // }
         return (
-            <View>
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={{paddingTop:200}}>
                 {/* <Text>Login Information</Text> */}
                 <Mytextinput
                     placeholder="Username"
@@ -85,7 +87,7 @@ export default class Login extends Component {
                     value={this.state.username}
                     style={{ padding: 10 }}
                 />
-                <Mytextinput
+                <PwdInput
                     placeholder="Password"
                     secureTextEntry= "true"
                     onChangeText={(text) => this.setState({ password: text })}
@@ -103,16 +105,20 @@ export default class Login extends Component {
                     onChangeText={(text) => this.setState({ password: text })}
                     value={this.state.password}
                 >Password</FloatingLabel> */}
-                <Mybutton title="Login" onPress={() => this.onLoginPress()} />
+                <Mybutton title="Login" customClick={() => this.onLoginPress()} />
                 {/* <MyButton
                     label='Login'
                     onPress={() => this.onLoginPress()}
                 /> */}
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('HomeScreen')}>
-                    <Text style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>Register?</Text>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('RegisterScreen')}>
+                    <Text style={{ fontSize: 16, paddingTop:20, textAlign: 'center', color: 'grey' }}>Register?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminScreen')}>
+                    <Text style={{ fontSize: 16, paddingTop:20, textAlign: 'center', color: 'grey' }}>View All Admin</Text>
                 </TouchableOpacity>
                 {/* <Text style={{alignSelf:'center'}}>Đăng nhập: username: demo, password: 123456</Text> */}
             </View>
+            </SafeAreaView>
         );
     }
 }
