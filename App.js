@@ -18,6 +18,7 @@ import DeleteCatatan from './Pages/DeleteUser';
 import Login from './Pages/LoginScreen';
 import RegisterScreen from './Pages/RegisterScreen';
 import AdminScreen from './Pages/AdminScreen';
+import AdminUpdate from './Pages/AdminUpdate';
 
 const Stack = createStackNavigator();
 
@@ -145,6 +146,20 @@ const App = () => {
           component={AdminScreen}
           options={{
             title: 'Admin Screen', //Set Header Title
+            headerStyle: {
+              backgroundColor: '#221eeb', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },
+          }}
+        />
+        <Stack.Screen
+          name="AdminUpdate"
+          component={AdminUpdate}
+          options={{
+            title: 'Admin Update', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },

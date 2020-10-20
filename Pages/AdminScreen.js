@@ -3,10 +3,9 @@ import { FlatList, Text, View, SafeAreaView } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 //Connction to access the pre-populated user_db.db
-var db = openDatabase({ name: 'data.db', createFromLocation : 2});
+var db = openDatabase({ name: "data", createFromLocation: "~data.db" });
 
-
-const ViewAllAdmin = () => {
+const ViewAllUser = () => {
   let [flatListItems, setFlatListItems] = useState([]);
 
   useEffect(() => {
@@ -60,4 +59,4 @@ const ViewAllAdmin = () => {
   );
 };
 
-export default ViewAllAdmin;
+export default ViewAllUser;

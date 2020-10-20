@@ -22,7 +22,7 @@ export default class Login extends Component {
     }
 
     componentDidMount() {
-        db = SQLite.openDatabase({ name: "data.db", createFromLocation: 1 },
+        db = SQLite.openDatabase({ name: "data", createFromLocation: "~data.db" },
             this.openSuccess, this.openError);
     }
 
@@ -115,6 +115,9 @@ export default class Login extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminScreen')}>
                     <Text style={{ fontSize: 16, paddingTop:20, textAlign: 'center', color: 'grey' }}>View All Admin</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminUpdate')}>
+                    <Text style={{ fontSize: 16, paddingTop:20, textAlign: 'center', color: 'grey' }}>Admin Update</Text>
                 </TouchableOpacity>
                 {/* <Text style={{alignSelf:'center'}}>Đăng nhập: username: demo, password: 123456</Text> */}
             </View>

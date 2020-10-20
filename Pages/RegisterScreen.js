@@ -27,7 +27,7 @@ export default class Register extends Component {
     }
 
     componentDidMount() {
-        db = SQLite.openDatabase({ name: "data.db", createFromLocation: 1 },
+        db = SQLite.openDatabase({ name: "data", createFromLocation: "~data.db" },
             this.openSuccess, this.openError);
     }
 
