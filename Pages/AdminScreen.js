@@ -3,14 +3,15 @@ import { FlatList, Text, View, SafeAreaView } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 //Connction to access the pre-populated user_db.db
-var db = openDatabase({ name: "data", createFromLocation: "~data.db" });
+//var db = openDatabase({ name: "data", createFromLocation: "~data.db" });
+var db = openDatabase({name : "AdminDB.db", createFromLocation : 1});
 
 const ViewAllUser = () => {
   let [flatListItems, setFlatListItems] = useState([]);
 
   useEffect(() => {
     db.transaction((tx) => {
-      tx.executeSql('SELECT * FROM users', [], (tx, results) => {
+      tx.executeSql('SELECT * FROM tbl_admin', [], (tx, results) => {
         var temp = [];
         for (let i = 0; i < results.rows.length; ++i)
           temp.push(results.rows.item(i));
@@ -34,11 +35,11 @@ const ViewAllUser = () => {
         style={{ backgroundColor: 'white', padding: 20 }}>
         <Text>Username: {item.username}</Text>
         <Text>Password: {item.password}</Text>
-        <Text>Nama Depan: {item.namadepan}</Text>
-        <Text>Nama Belakang: {item.namabelakang}</Text>
-        <Text>Tanggal Lahir: {item.tgllahir}</Text>
-        <Text>Jenis Kelamin: {item.jeniskelamin}</Text>
-        <Text>Foto Profil: {item.fotoprofil}</Text>
+        <Text>Nama Depan: {item.firstname}</Text>
+        <Text>Nama Belakang: {item.lastname}</Text>
+        <Text>Tanggal Lahir: {item.birthdate}</Text>
+        <Text>Jenis Kelamin: {item.sex}</Text>
+        <Text>Foto Profil: {item.profpict}</Text>
       </View>
     );
   };

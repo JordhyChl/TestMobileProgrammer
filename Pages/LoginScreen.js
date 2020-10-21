@@ -22,7 +22,7 @@ export default class Login extends Component {
     }
 
     componentDidMount() {
-        db = SQLite.openDatabase({ name: "data", createFromLocation: "~data.db" },
+        db = SQLite.openDatabase({ name: "AdminDB.db", createFromLocation: 1 },
             this.openSuccess, this.openError);
     }
 
@@ -54,7 +54,7 @@ export default class Login extends Component {
             return;
         }
         db.transaction((tx) => {
-            const sql = `SELECT * FROM users WHERE username='${username}'`;
+            const sql = `SELECT * FROM tbl_admin WHERE username='${username}'`;
             tx.executeSql(sql, [], (tx, results) => {
                 const len = results.rows.length;
                 if (!len) {
@@ -94,22 +94,7 @@ export default class Login extends Component {
                     value={this.state.password}
                     style={{ padding: 10 }}
                 />
-                {/* <FloatingLabel
-                    {...propsFloatingLabel}
-                    onChangeText={(text) => this.setState({ username: text })}
-                    value={this.state.username}
-                >Username</FloatingLabel>
-                <FloatingLabel
-                    {...propsFloatingLabel}
-                    secureTextEntry
-                    onChangeText={(text) => this.setState({ password: text })}
-                    value={this.state.password}
-                >Password</FloatingLabel> */}
                 <Mybutton title="Login" customClick={() => this.onLoginPress()} />
-                {/* <MyButton
-                    label='Login'
-                    onPress={() => this.onLoginPress()}
-                /> */}
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('RegisterScreen')}>
                     <Text style={{ fontSize: 16, paddingTop:20, textAlign: 'center', color: 'grey' }}>Register?</Text>
                 </TouchableOpacity>
@@ -119,7 +104,6 @@ export default class Login extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminUpdate')}>
                     <Text style={{ fontSize: 16, paddingTop:20, textAlign: 'center', color: 'grey' }}>Admin Update</Text>
                 </TouchableOpacity>
-                {/* <Text style={{alignSelf:'center'}}>Đăng nhập: username: demo, password: 123456</Text> */}
             </View>
             </SafeAreaView>
         );
