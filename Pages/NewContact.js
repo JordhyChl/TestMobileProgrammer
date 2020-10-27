@@ -9,15 +9,21 @@ import {
   KeyboardAvoidingView,
   Alert,
   SafeAreaView,
-  Text,
+  StyleSheet,
+  Image,
+  Button
 } from 'react-native';
 import Mytextinput from './components/Mytextinput';
 import Mybutton from './components/Mybutton';
+import RNPickerSelect from 'react-native-picker-select';
 import { openDatabase } from 'react-native-sqlite-storage';
+import { color } from 'react-native-reanimated';
 
 var db = openDatabase({ name: 'UserDatabase.db' });
 
 const RegisterCatatan = ({ navigation }) => {
+  const [showWaktu, setShowWaktu] = useState(false);
+  const [showInterval, setShowInterval] = useState(false);
   let [catatanJudul, setCatatanJudul] = useState('');
   let [catatanDeskripsi, setCatatanDeskripsi] = useState('');
   let [catatanWaktu, setCatatanWaktu] = useState('');
@@ -28,23 +34,23 @@ const RegisterCatatan = ({ navigation }) => {
     console.log(catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, catatanLampiran);
 
     if (!catatanJudul) {
-      alert('Please fill name');
+      alert('Please fill Judul Catatan');
       return;
     }
     if (!catatanDeskripsi) {
-      alert('Please fill Contact Number');
+      alert('Please fill Deskripsi Catatan');
       return;
     }
-    if (!catatanWaktu) {
-      alert('Please fill Address');
-      return;
-    }
-    if (!catatanInterval) {
-      alert('Please fill Address');
-      return;
-    }
+    // if (!catatanWaktu) {
+    //   alert('Please fill Waktu Pengingat');
+    //   return;
+    // }
+    // if (!catatanInterval) {
+    //   alert('Please fill Interval Pengingat');
+    //   return;
+    // }
     if (!catatanLampiran) {
-      alert('Please fill Address');
+      alert('Please fill Lampiran');
       return;
     }
 
@@ -74,7 +80,7 @@ const RegisterCatatan = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, marginTop:200 }}>
+      <View style={{ flex: 1, marginTop: 200 }}>
         <View style={{ flex: 1 }}>
           <ScrollView keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView
@@ -90,15 +96,56 @@ const RegisterCatatan = ({ navigation }) => {
                 onChangeText={(catatanDeskripsi) => setCatatanDeskripsi(catatanDeskripsi)}
                 style={{ padding: 10 }}
               />
-              <Mytextinput
-                placeholder="Enter Waktu"
-                onChangeText={(catatanWaktu) => setCatatanWaktu(catatanWaktu)}
-                style={{ padding: 10 }}
+              {showWaktu ? (
+
+                <RNPickerSelect
+                  placeholder={{
+                    label: 'Pilih Waktu Pegingat',
+                    color: '#9EA0A4',
+                  }}
+                  onValueChange={(catatanWaktu) => setCatatanWaktu(catatanWaktu)}
+                  items={[
+                    { label: '1 Hari', value: '1 Hari' },
+                    { label: '3 Jam', value: '3 Jam' },
+                    { label: '1 Jam', value: '1 Jam' },
+                  ]}
+                  style={{
+                    ...pickerSelectStyles,
+                    iconContainer: {
+                      top: 10,
+                      right: 12,
+                    },
+                  }}
+                />
+              ) : null}
+              <Mybutton
+                title="Isi Waktu Pengingat"
+                customClick={() => setShowWaktu(!showWaktu)}
               />
-              <Mytextinput
-                placeholder="Enter Interval"
-                onChangeText={(catatanInterval) => setCatatanInterval(catatanInterval)}
-                style={{ padding: 10 }}
+              {showInterval ? (
+                <RNPickerSelect
+                  placeholder={{
+                    label: 'Pilih Interval Waktu',
+                    color: '#9EA0A4',
+                  }}
+                  onValueChange={(catatanInterval) => setCatatanInterval(catatanInterval)}
+                  items={[
+                    { label: '1 Hari', value: '1 Hari' },
+                    { label: '3 Jam', value: '3 Jam' },
+                    { label: '1 Jam', value: '1 Jam' },
+                  ]}
+                  style={{
+                    ...pickerSelectStyles,
+                    iconContainer: {
+                      top: 10,
+                      right: 12,
+                    },
+                  }}
+                />
+              ) : null}
+              <Mybutton
+                title="Isi Interval Waktu"
+                customClick={() => setShowInterval(!showInterval)}
               />
               <Mytextinput
                 placeholder="Enter Lampiran"
@@ -115,3 +162,19 @@ const RegisterCatatan = ({ navigation }) => {
 };
 
 export default RegisterCatatan;
+
+const pickerSelectStyles = StyleSheet.create({
+  inputAndroid: {
+    fontSize: 16,
+    marginLeft: 35,
+    marginTop: 10,
+    marginRight: 35,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+  }
+});

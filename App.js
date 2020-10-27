@@ -47,7 +47,7 @@ const App = () => {
           name="View"
           component={ViewCatatan}
           options={{
-            title: 'View User', //Set Header Title
+            title: 'View Catatan', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },
@@ -61,7 +61,7 @@ const App = () => {
           name="ViewAll"
           component={ViewAllCatatan}
           options={{
-            title: 'View Users', //Set Header Title
+            title: 'View All Catatan', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },
@@ -75,7 +75,7 @@ const App = () => {
           name="Update"
           component={UpdateCatatan}
           options={{
-            title: 'Update User', //Set Header Title
+            title: 'Update Catatan', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },
@@ -89,7 +89,7 @@ const App = () => {
           name="NewContact"
           component={NewContact}
           options={{
-            title: 'New Contact', //Set Header Title
+            title: 'Catatan Baru', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },
@@ -103,7 +103,7 @@ const App = () => {
           name="Delete"
           component={DeleteCatatan}
           options={{
-            title: 'Delete User', //Set Header Title
+            title: 'Hapus Catatan', //Set Header Title
             headerStyle: {
               backgroundColor: '#221eeb', //Set Header color
             },

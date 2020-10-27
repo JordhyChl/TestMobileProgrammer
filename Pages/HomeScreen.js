@@ -34,23 +34,23 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ flex: 1, marginTop: 200 }}>
         <View style={{ flex: 1 }}>
           <Mybutton
-            title="New Contact"
+            title="Catatan Baru"
             customClick={() => navigation.navigate('NewContact')}
           />
           <Mybutton
-            title="Update"
+            title="Update Catatan"
             customClick={() => navigation.navigate('Update')}
           />
           <Mybutton
-            title="View"
+            title="View Catatan"
             customClick={() => navigation.navigate('View')}
           />
           <Mybutton
-            title="View All"
+            title="View All Catatan"
             customClick={() => navigation.navigate('ViewAll')}
           />
           <Mybutton
-            title="Delete"
+            title="Hapus Catatan"
             customClick={() => navigation.navigate('Delete')}
           />
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
