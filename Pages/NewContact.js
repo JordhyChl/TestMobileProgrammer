@@ -1,7 +1,3 @@
-//    blog.edafait.com
-//    www.edafait.com
-// Screen to register the user
-
 import React, { useState } from 'react';
 import {
   View,
@@ -30,6 +26,7 @@ const RegisterCatatan = ({ navigation }) => {
   let [catatanWaktu, setCatatanWaktu] = useState('');
   let [catatanInterval, setCatatanInterval] = useState('');
   let [catatanLampiran, setCatatanLampiran] = useState('');
+  //let [catatanLampiran, setCatatanLampiran] = [JSON.stringify(catatanLampiran)];
 
   const [singleFile, setSingleFile] = useState('');
   //const [multipleFile, setMultipleFile] = useState([]);
@@ -38,7 +35,7 @@ const RegisterCatatan = ({ navigation }) => {
     //Opening Document Picker for selection of one file
     try {
       const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
+        type: [DocumentPicker.types.images],
         //There can me more options as well
         // DocumentPicker.types.allFiles
         // DocumentPicker.types.images
@@ -67,36 +64,6 @@ const RegisterCatatan = ({ navigation }) => {
     }
   };
 
-  // const selectMultipleFile = async () => {
-  //   //Opening Document Picker for selection of multiple file
-  //   try {
-  //     const results = await DocumentPicker.pickMultiple({
-  //       type: [DocumentPicker.types.images],
-  //       //There can me more options as well find above
-  //     });
-  //     for (const res of results) {
-  //       //Printing the log realted to the file
-  //       console.log('res : ' + JSON.stringify(res));
-  //       console.log('URI : ' + res.uri);
-  //       console.log('Type : ' + res.type);
-  //       console.log('File Name : ' + res.name);
-  //       console.log('File Size : ' + res.size);
-  //     }
-  //     //Setting the state to show multiple file attributes
-  //     setMultipleFile(results);
-  //   } catch (err) {
-  //     //Handling any exception (If any)
-  //     if (DocumentPicker.isCancel(err)) {
-  //       //If user canceled the document selection
-  //       alert('Canceled from multiple doc picker');
-  //     } else {
-  //       //For Unknown Error
-  //       alert('Unknown Error: ' + JSON.stringify(err));
-  //       throw err;
-  //     }
-  //   }
-  // };
-
   let register_catatan = () => {
     console.log(catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, catatanLampiran);
 
@@ -108,10 +75,11 @@ const RegisterCatatan = ({ navigation }) => {
       alert('Please fill Deskripsi Catatan');
       return;
     }
-    if (!catatanLampiran) {
-      alert('Please fill Lampiran');
-      return;
-    }
+    // if (!catatanLampiran) {
+    //   alert('Please fill Lampiran');
+    //   return;
+    // }
+    //JSON.stringify(catatanLampiran)
 
     db.transaction(function (tx) {
       tx.executeSql(
@@ -139,7 +107,7 @@ const RegisterCatatan = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, marginTop: 200 }}>
+      <View style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <ScrollView keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView
@@ -208,27 +176,27 @@ const RegisterCatatan = ({ navigation }) => {
               />
               <Mytextinput
                 placeholder="Enter Lampiran"
-                onChangeText={(catatanLampiran) => setCatatanLampiran(catatanLampiran)}
+                value={singleFile.name}
+                onChangeText={(catatanLampiran) => console.log(catatanLampiran)}
                 style={{ padding: 10 }}
               />
-              {/*To show single file attribute*/}
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.buttonStyle}
-              onPress={selectOneFile}>
-              {/*Single file selection button*/}
-              <Text style={{ marginRight: 10, fontSize: 19 }}>
-                Click here to pick file
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.buttonStyle}
+                onPress={selectOneFile}>
+                {/*Single file selection button*/}
+                <Text style={{ marginRight: 10, fontSize: 19, paddingTop: 10 }}>
+                  Click here to pick file
               </Text>
-              <Image
-                source={{
-                  uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-                }}
-                style={styles.imageIconStyle}
-              />
-            </TouchableOpacity>
-            {/*Showing the data of selected Single file*/}
-              <Text style={styles.textStyle}>
+                <Image
+                  source={{
+                    uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+                  }}
+                  style={styles.imageIconStyle}
+                />
+              </TouchableOpacity>
+              {/*Showing the data of selected Single file*/}
+              {/* <Text style={styles.textStyle} >
                 File Name: {singleFile.name ? singleFile.name : ''}
                 {'\n'}
                 Type: {singleFile.type ? singleFile.type : ''}
@@ -237,7 +205,11 @@ const RegisterCatatan = ({ navigation }) => {
                 {'\n'}
                 URI: {singleFile.uri ? singleFile.uri : ''}
                 {'\n'}
-              </Text>
+              </Text> */}
+              <Image
+                source={{ uri: singleFile.uri }}
+                style={{ width: 424, height: 278 }}
+              />
               <Mybutton title="Submit" customClick={register_catatan} />
             </KeyboardAvoidingView>
           </ScrollView>
@@ -280,7 +252,7 @@ const styles = StyleSheet.create({
   textStyle: {
     backgroundColor: '#fff',
     fontSize: 15,
-    marginTop: 16,
+    marginTop: 10,
     color: 'black',
   },
   buttonStyle: {

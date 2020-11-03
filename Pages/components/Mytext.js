@@ -11,7 +11,7 @@ const Mytext = (props) => {
 
 const styles = StyleSheet.create({
   text: {
-    color: '#111825',
+    color: '#000000',
     fontSize: 18,
     marginTop: 16,
     marginLeft: 35,
