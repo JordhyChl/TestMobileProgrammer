@@ -25,7 +25,7 @@ const RegisterCatatan = ({ navigation }) => {
   let [catatanDeskripsi, setCatatanDeskripsi] = useState('');
   let [catatanWaktu, setCatatanWaktu] = useState('');
   let [catatanInterval, setCatatanInterval] = useState('');
-  let [catatanLampiran, setCatatanLampiran] = useState('');
+  //let [catatanLampiran, setCatatanLampiran] = useState('');
   //let [catatanLampiran, setCatatanLampiran] = [JSON.stringify(catatanLampiran)];
 
   const [singleFile, setSingleFile] = useState('');
@@ -65,7 +65,7 @@ const RegisterCatatan = ({ navigation }) => {
   };
 
   let register_catatan = () => {
-    console.log(catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, catatanLampiran);
+    console.log(catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, singleFile.name);
 
     if (!catatanJudul) {
       alert('Please fill Judul Catatan');
@@ -84,7 +84,7 @@ const RegisterCatatan = ({ navigation }) => {
     db.transaction(function (tx) {
       tx.executeSql(
         'INSERT INTO table_catatan (catatan_judul, catatan_desc, catatan_waktu, catatan_interval, catatan_lampiran) VALUES (?,?,?,?,?)',
-        [catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, catatanLampiran],
+        [catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, singleFile.name],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -177,7 +177,7 @@ const RegisterCatatan = ({ navigation }) => {
               <Mytextinput
                 placeholder="Enter Lampiran"
                 value={singleFile.name}
-                onChangeText={(catatanLampiran) => console.log(catatanLampiran)}
+                //onChangeText={(singleFile) => setSingleFile(singleFile)}
                 style={{ padding: 10 }}
               />
               <TouchableOpacity
