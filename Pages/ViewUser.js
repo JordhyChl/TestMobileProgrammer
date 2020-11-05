@@ -45,12 +45,12 @@ const ViewCatatan = () => {
           />
           <Mybutton title="Search Catatan" customClick={searchCatatan} />
           <View style={{ marginLeft: 35, marginRight: 35, marginTop: 10 }}>
-            <Text>User Id: {catatanData.catatan_id}</Text>
-            <Text>User Catatan: {catatanData.catatan_judul}</Text>
-            <Text>User Deskripsi: {catatanData.catatan_desc}</Text>
-            <Text>User Waktu: {catatanData.catatan_waktu}</Text>
-            <Text>User Interval: {catatanData.catatan_interval}</Text>
-            <Text>User Lampiran: {catatanData.catatan_lampiran}</Text>
+            <Text>Id: {catatanData.catatan_id}</Text>
+            <Text>Catatan: {catatanData.catatan_judul}</Text>
+            <Text>Deskripsi: {catatanData.catatan_desc}</Text>
+            <Text>Waktu: {catatanData.catatan_waktu}</Text>
+            <Text>Interval: {catatanData.catatan_interval}</Text>
+            <Text>Lampiran: {catatanData.catatan_lampiran}</Text>
           </View>
         </View>
       </View>

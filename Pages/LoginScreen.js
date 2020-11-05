@@ -1,182 +1,319 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Alert, StyleSheet } from 'react-native';
-import SQLite from 'react-native-sqlite-storage';
-import Mytextinput from './components/Mytextinput';
-import PwdInput from './components/PwdInput';
-import Mybutton from './components/Mybutton';
-import AsyncStorage from '@react-native-community/async-storage';
-import MyView from './MyView';
+import React from 'react';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    Platform,
+    StyleSheet,
+    StatusBar,
+    Alert
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import LinearGradient from 'react-native-linear-gradient';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+//import HomeScreen from './HomeScreen';
+import { useTheme } from 'react-native-paper';
 
-let db;
-export default class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            getValue: '',
-        };
-    }
+import { AuthContext } from './components/context';
 
-    componentDidMount() {
-        db = SQLite.openDatabase({ name: "AdminDB.db", createFromLocation: 1 },
-            this.openSuccess, this.openError);
-    }
+import Users from './components/users';
 
-    componentWillUnmount() {
-        this.closeDatabase();
-    }
+const LoginScreen = ({ navigation }) => {
 
-    openSuccess() {
-        console.log("Database is opened");
-    }
+    const [data, setData] = React.useState({
+        username: '',
+        password: '',
+        check_textInputChange: false,
+        secureTextEntry: true,
+        isValidUser: true,
+        isValidPassword: true,
+    });
 
-    openError(err) {
-        console.log("error: ", err);
-    }
+    const { colors } = useTheme();
 
-    closeDatabase = () => {
-        if (db) {
-            console.log("Closing database ...");
-            db.close();
-        } else {
-            console.log("Database was not OPENED");
-        }
-    }
+    const { signIn } = React.useContext(AuthContext);
 
-    saveValueFunction = () => {
-        if (this.state.username) {
-            AsyncStorage.setItem('any_key_here', this.state.username);
-            this.setState({ username: '' })
-            alert('Data Saved');
-        } else {
-            alert('Please fill data');
-        }
-    };
-
-    getValueFunction = () => {
-        AsyncStorage.getItem('any_key_here').then(value =>
-            this.setState({ getValue: value })
-        );
-    };
-
-    removeItemValue() {
-        try {
-            AsyncStorage.removeItem('any_key_here');
-            alert('Berhasil Menghapus Data')
-        }
-        catch (exception) {
-            console.log(exception)
-            alert('Gagal Menghapus Data')
-        }
-    };
-
-
-    // removeValueFunction = () => {
-    //     AsyncStorage.removeItem('any_key_here', this.state.username)
-    // }
-
-    onLoginPress() {
-        const { username, password } = this.state;
-        if (username === '' || password === '') {
-            alert('Please enter your username and password!');
-            return;
-        }
-        db.transaction((tx) => {
-            const sql = `SELECT * FROM tbl_admin WHERE username='${username}'`;
-            tx.executeSql(sql, [], (tx, results) => {
-                const len = results.rows.length;
-                if (!len) {
-                    alert('This account does not exist!');
-                } else {
-                    const row = results.rows.item(0);
-                    if (password === row.password) {
-                        this.props.navigation.navigate('HomeScreen');
-                        Alert.alert(
-                            'Selamat Datang',
-                            this.state.username
-                        );
-                        return;
-                    }
-                    alert('Authentication failed!');
-                }
+    const textInputChange = (val) => {
+        if (val.trim().length >= 4) {
+            setData({
+                ...data,
+                username: val,
+                check_textInputChange: true,
+                isValidUser: true
             });
+        } else {
+            setData({
+                ...data,
+                username: val,
+                check_textInputChange: false,
+                isValidUser: false
+            });
+        }
+    }
+
+    const handlePasswordChange = (val) => {
+        if (val.trim().length >= 8) {
+            setData({
+                ...data,
+                password: val,
+                isValidPassword: true
+            });
+        } else {
+            setData({
+                ...data,
+                password: val,
+                isValidPassword: false
+            });
+        }
+    }
+
+    const updateSecureTextEntry = () => {
+        setData({
+            ...data,
+            secureTextEntry: !data.secureTextEntry
         });
     }
-    render() {
-        return (
-            <SafeAreaView style={{ flex: 1 }}>
-                <ScrollView keyboardShouldPersistTaps="handled">
-                    <View style={{ paddingTop: 200 }}>
-                        <Mytextinput
-                            placeholder="Username"
-                            onChangeText={(text) => this.setState({ username: text })}
-                            value={this.state.username}
-                            style={{ padding: 10 }}
-                        />
-                        <PwdInput
-                            placeholder="Password"
-                            secureTextEntry="true"
-                            onChangeText={(text) => this.setState({ password: text })}
-                            value={this.state.password}
-                            style={{ padding: 10 }}
-                        />
-                        <Mybutton title="Login" customClick={() => this.onLoginPress()} />
-                        <Mybutton title="Save Data AsyncStorage" customClick={() => this.saveValueFunction()} />
-                        <Mybutton title="View Data AsyncStorage" customClick={() => this.getValueFunction()} />
-                        <Mybutton title="Delete Data AsyncStorage" customClick={() => this.removeItemValue()} />
-                        <Text style={styles.text}> {this.state.getValue} </Text>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RegisterScreen')}>
-                            <Text style={{ fontSize: 16, paddingTop: 20, textAlign: 'center', color: 'grey' }}>Register?</Text>
-                        </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminScreen')}>
-                            <Text style={{ fontSize: 16, paddingTop: 20, textAlign: 'center', color: 'grey' }}>View All Admin</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('AdminUpdate')}>
-                            <Text style={{ fontSize: 16, paddingTop: 20, textAlign: 'center', color: 'grey' }}>Admin Update</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        );
+    const handleValidUser = (val) => {
+        if (val.trim().length >= 4) {
+            setData({
+                ...data,
+                isValidUser: true
+            });
+        } else {
+            setData({
+                ...data,
+                isValidUser: false
+            });
+        }
     }
-}
+
+    const loginHandle = (userName, password) => {
+
+        const foundUser = Users.filter(item => {
+            return userName == item.username && password == item.password;
+        });
+
+        if (data.username.length == 0 || data.password.length == 0) {
+            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+                { text: 'Okay' }
+            ]);
+            return;
+        }
+
+        if (foundUser.length == 0) {
+            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+                { text: 'Okay' }
+            ]);
+            return;
+        }
+        signIn(foundUser);
+    }
+
+    return (
+        <View style={styles.container}>
+            <StatusBar backgroundColor='#c24908' barStyle="light-content" />
+            <View style={styles.header}>
+                <Text style={styles.text_header}>Login</Text>
+            </View>
+            <Animatable.View
+                animation="fadeInUpBig"
+                style={[styles.footer, {
+                    backgroundColor: colors.background
+                }]}
+            >
+                <Text style={[styles.text_footer, {
+                    color: colors.text
+                }]}>Username</Text>
+                <View style={styles.action}>
+                    <FontAwesome
+                        name="user-o"
+                        color={colors.text}
+                        size={20}
+                    />
+                    <TextInput
+                        placeholder="Your Username"
+                        placeholderTextColor="#666666"
+                        style={[styles.textInput, {
+                            color: colors.text
+                        }]}
+                        autoCapitalize="none"
+                        onChangeText={(val) => textInputChange(val)}
+                        onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+                    />
+                    {data.check_textInputChange ?
+                        <Animatable.View
+                            animation="bounceIn"
+                        >
+                            <Feather
+                                name="check-circle"
+                                color="green"
+                                size={20}
+                            />
+                        </Animatable.View>
+                        : null}
+                </View>
+                {data.isValidUser ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                    </Animatable.View>
+                }
+
+
+                <Text style={[styles.text_footer, {
+                    color: colors.text,
+                    marginTop: 35
+                }]}>Password</Text>
+                <View style={styles.action}>
+                    <Feather
+                        name="lock"
+                        color={colors.text}
+                        size={20}
+                    />
+                    <TextInput
+                        placeholder="Your Password"
+                        placeholderTextColor="#666666"
+                        secureTextEntry={data.secureTextEntry ? true : false}
+                        style={[styles.textInput, {
+                            color: colors.text
+                        }]}
+                        autoCapitalize="none"
+                        onChangeText={(val) => handlePasswordChange(val)}
+                    />
+                    <TouchableOpacity
+                        onPress={updateSecureTextEntry}
+                    >
+                        {data.secureTextEntry ?
+                            <Feather
+                                name="eye-off"
+                                color="grey"
+                                size={20}
+                            />
+                            :
+                            <Feather
+                                name="eye"
+                                color="grey"
+                                size={20}
+                            />
+                        }
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={updateSecureTextEntry}
+                    >
+                        {/* {data.secureTextEntry ? 
+                    <Feather 
+                        name="eye-off"
+                        color="grey"
+                        size={20}
+                    />
+                    :
+                    <Feather 
+                        name="eye"
+                        color="grey"
+                        size={20}
+                    />
+                    } */}
+                    </TouchableOpacity>
+                </View>
+                {data.isValidPassword ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
+                    </Animatable.View>
+                }
+
+
+                {/* <TouchableOpacity>
+                <Text style={{color: '#009387', marginTop:15}}>Forgot password?</Text>
+            </TouchableOpacity> */}
+                <View style={styles.button}>
+                    <TouchableOpacity
+                        style={styles.signIn}
+                        onPress={() => { loginHandle(data.username, data.password) }}
+                    >
+                        <LinearGradient
+                            colors={['#e87e43', '#c24908']}
+                            style={styles.signIn}
+                        >
+                            <Text style={[styles.textSign, {
+                                color: '#fff'
+                            }]}>Sign In</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
+            </Animatable.View>
+        </View>
+    );
+};
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-        padding: 16,
-        paddingTop: 32
+        backgroundColor: '#c24908'
     },
-    textWho: {
+    header: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        paddingBottom: 50
+    },
+    footer: {
+        flex: 3,
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingHorizontal: 20,
+        paddingVertical: 30
+    },
+    text_header: {
+        color: '#fff',
         fontWeight: 'bold',
-        fontSize: 16
+        fontSize: 30
     },
-    viewResult: {
-        flexDirection: 'row'
+    text_footer: {
+        color: '#05375a',
+        fontSize: 18
     },
-
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 5
+    },
+    actionError: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#FF0000',
+        paddingBottom: 5
+    },
     textInput: {
-        height: 40,
-        width: 300,
-        backgroundColor: 'white',
-        marginTop: 8,
-        marginBottom: 8,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 8,
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -12,
+        paddingLeft: 10,
+        color: '#05375a',
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
+    },
+    button: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    signIn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
         borderRadius: 10
     },
-    text: {
-        paddingTop: 10,
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    viewRemove: {
-        marginTop: 20
+    textSign: {
+        fontSize: 18,
+        fontWeight: 'bold'
     }
 });

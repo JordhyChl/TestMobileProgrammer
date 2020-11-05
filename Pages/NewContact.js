@@ -94,7 +94,7 @@ const RegisterCatatan = ({ navigation }) => {
               [
                 {
                   text: 'Ok',
-                  onPress: () => navigation.navigate('HomeScreen'),
+                  onPress: () => navigation.navigate('Home'),
                 },
               ],
               { cancelable: false }
