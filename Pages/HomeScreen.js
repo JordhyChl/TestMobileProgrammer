@@ -1,12 +1,31 @@
-import React from 'react';
+//import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Button, Image, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Mybutton from './components/Mybutton';
-
+import { openDatabase } from 'react-native-sqlite-storage';
 import{ AuthContext } from './components/context';
 
-
+var db = openDatabase({ name: 'UserDatabase.db' });
 const HomeScreen = ({navigation}) => {
+  useEffect(() => {
+    db.transaction(function (txn) {
+      txn.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='table_catatan'",
+        [],
+        function (tx, res) {
+          console.log('item:', res.rows.length);
+          if (res.rows.length == 0) {
+            txn.executeSql('DROP TABLE IF EXISTS table_catatan', []);
+            txn.executeSql(
+              'CREATE TABLE IF NOT EXISTS table_catatan(catatan_id INTEGER PRIMARY KEY AUTOINCREMENT, catatan_judul VARCHAR(255), catatan_desc VARCHAR(255), catatan_waktu VARCHAR(255), catatan_interval VARCHAR(255), catatan_lampiran VARCHAR(255))',
+              []
+            );
+          }
+        }
+      );
+    });
+  }, []);
 
   const { signOut } = React.useContext(AuthContext);
 

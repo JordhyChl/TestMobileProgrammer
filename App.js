@@ -10,23 +10,23 @@ import { Button, View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeScreen from './Pages/HomeScreen';
-import NewContact from './Pages/NewContact';
-import UpdateCatatan from './Pages/UpdateUser';
-import ViewCatatan from './Pages/ViewUser';
-import ViewAllCatatan from './Pages/ViewAllUser';
-import DeleteCatatan from './Pages/DeleteUser';
-import RegisterScreen from './Pages/RegisterScreen';
-import AdminScreen from './Pages/AdminScreen';
-import AdminUpdate from './Pages/AdminUpdate';
+// import HomeScreen from './Pages/HomeScreen';
+// import NewContact from './Pages/NewContact';
+// import UpdateCatatan from './Pages/UpdateUser';
+// import ViewCatatan from './Pages/ViewUser';
+// import ViewAllCatatan from './Pages/ViewAllUser';
+// import DeleteCatatan from './Pages/DeleteUser';
+// import RegisterScreen from './Pages/RegisterScreen';
+// import AdminScreen from './Pages/AdminScreen';
+// import AdminUpdate from './Pages/AdminUpdate';
 import AsyncStorage from '@react-native-community/async-storage';
 import { AuthContext } from './Pages/components/context';
 import LoginScreen from './Pages/LoginScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainTabScreen from './Pages/MainTabScreen';
-import SupportScreen from './Pages/SupportScreen';
-import SettingsScreen from './Pages/SettingsScreen';
-import BookmarkScreen from './Pages/BookmarkScreen';
+// import SupportScreen from './Pages/SupportScreen';
+// import SettingsScreen from './Pages/SettingsScreen';
+// import BookmarkScreen from './Pages/BookmarkScreen';
 import { DrawerContent } from './Pages/DrawerContent';
 import RootStackScreen from './Pages/RootStackScreen';
 
@@ -42,28 +42,28 @@ const App = () => {
   };
 
   const loginReducer = (prevState, action) => {
-    switch( action.type ) {
-      case 'RETRIEVE_TOKEN': 
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
         return {
           ...prevState,
           userToken: action.token,
           isLoading: false,
         };
-      case 'LOGIN': 
+      case 'LOGIN':
         return {
           ...prevState,
           userName: action.id,
           userToken: action.token,
           isLoading: false,
         };
-      case 'LOGOUT': 
+      case 'LOGOUT':
         return {
           ...prevState,
           userName: null,
           userToken: null,
           isLoading: false,
         };
-      case 'REGISTER': 
+      case 'REGISTER':
         return {
           ...prevState,
           userName: action.id,
@@ -76,26 +76,26 @@ const App = () => {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
-    signIn: async(foundUser) => {
+    signIn: async (foundUser) => {
       // setUserToken('fgkj');
       // setIsLoading(false);
       const userToken = String(foundUser[0].userToken);
       const userName = foundUser[0].username;
-      
+
       try {
         await AsyncStorage.setItem('userToken', userToken);
-      } catch(e) {
+      } catch (e) {
         console.log(e);
       }
       // console.log('user token: ', userToken);
       dispatch({ type: 'LOGIN', id: userName, token: userToken });
     },
-    signOut: async() => {
+    signOut: async () => {
       // setUserToken(null);
       // setIsLoading(false);
       try {
         await AsyncStorage.removeItem('userToken');
-      } catch(e) {
+      } catch (e) {
         console.log(e);
       }
       dispatch({ type: 'LOGOUT' });
@@ -105,18 +105,18 @@ const App = () => {
       // setIsLoading(false);
     },
     toggleTheme: () => {
-      setIsDarkTheme( isDarkTheme => !isDarkTheme );
+      setIsDarkTheme(isDarkTheme => !isDarkTheme);
     }
   }), []);
 
   useEffect(() => {
-    setTimeout(async() => {
+    setTimeout(async () => {
       // setIsLoading(false);
       let userToken;
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
-      } catch(e) {
+      } catch (e) {
         console.log(e);
       }
       // console.log('user token: ', userToken);
@@ -124,33 +124,33 @@ const App = () => {
     }, 1000);
   }, []);
 
-  if( loginState.isLoading ) {
-    return(
-      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-        <ActivityIndicator size="large"/>
+  if (loginState.isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
     // <PaperProvider theme={theme}>
-      <AuthContext.Provider value={authContext}>
-        <NavigationContainer>
-          {loginState.userToken !== null ? (
-            <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-              <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
-              {/* <Drawer.Screen name="SupportScreen" component={SupportScreen} />
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {loginState.userToken !== null ? (
+          <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+            <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
+            {/* <Drawer.Screen name="SupportScreen" component={SupportScreen} />
               <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
               <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} /> */}
-            </Drawer.Navigator>
-          )
-            :
-            <RootStackScreen />
-          }
-        </NavigationContainer>
-      </AuthContext.Provider>
+          </Drawer.Navigator>
+        )
+          :
+          <RootStackScreen />
+        }
+      </NavigationContainer>
+    </AuthContext.Provider>
     // </PaperProvider>
-    
+
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -15,23 +15,25 @@ import Mybutton from './components/Mybutton';
 import RNPickerSelect from 'react-native-picker-select';
 import { openDatabase } from 'react-native-sqlite-storage';
 import DocumentPicker from 'react-native-document-picker';
+import { ListItem, Input, Button, Overlay } from 'react-native-elements';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment';
+import { fcmService } from './components/FCMService'
 
 var db = openDatabase({ name: 'UserDatabase.db' });
 
-const RegisterCatatan = ({ navigation }) => {
-  const [showWaktu, setShowWaktu] = useState(false);
-  const [showInterval, setShowInterval] = useState(false);
-  let [catatanJudul, setCatatanJudul] = useState('');
-  let [catatanDeskripsi, setCatatanDeskripsi] = useState('');
-  let [catatanWaktu, setCatatanWaktu] = useState('');
-  let [catatanInterval, setCatatanInterval] = useState('');
-  //let [catatanLampiran, setCatatanLampiran] = useState('');
-  //let [catatanLampiran, setCatatanLampiran] = [JSON.stringify(catatanLampiran)];
+class RegisterCatatan extends Component {
+  state = {
+    isDateTimePickerVisible: false,
+    notificationTime: moment(),
+    catatanJudul: '',
+    catatanDeskripsi: '',
+    singleFile: '',
+    isVisibleOverlay: false,
+    notifyData: {}
+  };
 
-  const [singleFile, setSingleFile] = useState('');
-  //const [multipleFile, setMultipleFile] = useState([]);
-
-  const selectOneFile = async () => {
+  selectOneFile = async () => {
     //Opening Document Picker for selection of one file
     try {
       const res = await DocumentPicker.pick({
@@ -64,7 +66,7 @@ const RegisterCatatan = ({ navigation }) => {
     }
   };
 
-  let register_catatan = () => {
+  register_catatan = () => {
     console.log(catatanJudul, catatanDeskripsi, catatanWaktu, catatanInterval, singleFile.name);
 
     if (!catatanJudul) {
@@ -105,165 +107,215 @@ const RegisterCatatan = ({ navigation }) => {
     });
   };
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          <ScrollView keyboardShouldPersistTaps="handled">
-            <KeyboardAvoidingView
-              behavior="padding"
-              style={{ flex: 1, justifyContent: 'space-between' }}>
-              <Mytextinput
-                placeholder="Enter Judul"
-                onChangeText={(catatanJudul) => setCatatanJudul(catatanJudul)}
-                style={{ padding: 10 }}
-              />
-              <Mytextinput
-                placeholder="Enter Deskripsi"
-                onChangeText={(catatanDeskripsi) => setCatatanDeskripsi(catatanDeskripsi)}
-                style={{ padding: 10 }}
-              />
-              {showWaktu ? (
-
-                <RNPickerSelect
-                  placeholder={{
-                    label: 'Pilih Waktu Pegingat',
-                    color: '#9EA0A4',
-                  }}
-                  onValueChange={(catatanWaktu) => setCatatanWaktu(catatanWaktu)}
-                  items={[
-                    { label: '1 Hari', value: '1 Hari' },
-                    { label: '3 Jam', value: '3 Jam' },
-                    { label: '1 Jam', value: '1 Jam' },
-                  ]}
-                  style={{
-                    ...pickerSelectStyles,
-                    iconContainer: {
-                      top: 10,
-                      right: 12,
-                    },
-                  }}
-                />
-              ) : null}
-              <Mybutton
-                title="Isi Waktu Pengingat"
-                customClick={() => setShowWaktu(!showWaktu)}
-              />
-              {showInterval ? (
-                <RNPickerSelect
-                  placeholder={{
-                    label: 'Pilih Interval Waktu',
-                    color: '#9EA0A4',
-                  }}
-                  onValueChange={(catatanInterval) => setCatatanInterval(catatanInterval)}
-                  items={[
-                    { label: '1 Hari', value: '1 Hari' },
-                    { label: '3 Jam', value: '3 Jam' },
-                    { label: '1 Jam', value: '1 Jam' },
-                  ]}
-                  style={{
-                    ...pickerSelectStyles,
-                    iconContainer: {
-                      top: 10,
-                      right: 12,
-                    },
-                  }}
-                />
-              ) : null}
-              <Mybutton
-                title="Isi Interval Waktu"
-                customClick={() => setShowInterval(!showInterval)}
-              />
-              <Mytextinput
-                placeholder="Enter Lampiran"
-                value={singleFile.name}
-                //onChangeText={(singleFile) => setSingleFile(singleFile)}
-                style={{ padding: 10 }}
-              />
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={styles.buttonStyle}
-                onPress={selectOneFile}>
-                {/*Single file selection button*/}
-                <Text style={{ marginRight: 10, fontSize: 19, paddingTop: 10 }}>
-                  Click here to pick file
-              </Text>
-                <Image
-                  source={{
-                    uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-                  }}
-                  style={styles.imageIconStyle}
-                />
-              </TouchableOpacity>
-              {/*Showing the data of selected Single file*/}
-              {/* <Text style={styles.textStyle} >
-                File Name: {singleFile.name ? singleFile.name : ''}
-                {'\n'}
-                Type: {singleFile.type ? singleFile.type : ''}
-                {'\n'}
-                File Size: {singleFile.size ? singleFile.size : ''}
-                {'\n'}
-                URI: {singleFile.uri ? singleFile.uri : ''}
-                {'\n'}
-              </Text> */}
-              <Image
-                source={{ uri: singleFile.uri }}
-                style={{ width: 424, height: 278 }}
-              />
-              <Mybutton title="Submit" customClick={register_catatan} />
-            </KeyboardAvoidingView>
-          </ScrollView>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-export default RegisterCatatan;
-
-const pickerSelectStyles = StyleSheet.create({
-  inputAndroid: {
-    fontSize: 16,
-    marginLeft: 35,
-    marginTop: 10,
-    marginRight: 35,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
+  componentDidMount() {
+    fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
   }
-});
+
+  onRegister = (token) => {
+    console.log("[Notification fcm ] onRegister:", token)
+  }
+
+  onNotification = (notify) => {
+    console.log("[Notification fcm ] : onNotification:", notify)
+    const notification = fcmService.buildNotification(this.createNotification(notify))
+    fcmService.displayNotification(notification)
+  }
+
+  onOpenNotification = (notify) => {
+    console.log("[Notification fcm ] : onOpenNotification ", notify)
+    this.setState({ notifyData: notify._data }, () => this.setState({ isVisibleOverlay: true }))
+  }
+
+  setReminder = () => {
+    const { notificationTime } = this.state;
+    const { catatanDeskripsi, catatanJudul } = this.state
+    let body = {
+      _title: catatanJudul,
+      _body: catatanDeskripsi,
+      _data: {
+        title: catatanJudul,
+        body: catatanDeskripsi,
+      },
+      _notificationId: Math.random().toString(),
+      time: notificationTime
+    }
+    this.scheduleReminder(body)
+  };
+
+  scheduleReminder = (notifyDetails) => {
+    const notification = fcmService.buildNotification(this.createNotification(notifyDetails))
+    fcmService.scheduleNotification(notification, notifyDetails.time)
+    this.resetState()
+  }
+
+  closeOverLay = () => {
+    this.setState({ isVisibleOverlay: false })
+  }
+
+  createNotification = (notify) => {
+    const channelObj = {
+      channelId: "SmapleChannelID",
+      channelName: "SmapleChannelName",
+      channelDes: "SmapleChannelDes"
+    }
+    const channel = fcmService.buildChannel(channelObj)
+    const buildNotify = {
+      title: notify._title,
+      content: notify._body,
+      sound: 'default',
+      channel: channel,
+      data: notify._data,
+      colorBgIcon: "#1A243B",
+      largeIcon: 'ic_launcher',
+      smallIcon: 'ic_launcher',
+      vibrate: true,
+      dataId: notify._notificationId
+    }
+    return buildNotify
+  }
+
+  resetState = () => {
+    this.setState({
+      notificationTime: moment(),
+      catatanJudul: '',
+      catatanDeskripsi: ''
+    })
+  }
+
+  displayDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true });
+  };
+
+  closeDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false });
+  };
+
+  handlePicked = date => {
+    this.closeDateTimePicker();
+    this.setState({
+      notificationTime: moment(date),
+    });
+  };
+
+  handleValueChange = (value, name) => {
+    this.setState({
+      [name]: value
+    })
+  }
+
+  render() {
+    const { isDateTimePickerVisible,
+      notificationTime, catatanJudul,
+      catatanDeskripsi, notifyData } = this.state;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.cardTitleView}>
+          <Text style={styles.cardTitle}>Add Reminder</Text>
+        </View>
+        <ListItem
+          title="Time"
+          titleStyle={styles.titleStyle}
+          onPress={this.displayDateTimePicker}
+          rightElement={<Text style={{ opacity: 0.7 }}>{moment(notificationTime).format('LT')}</Text>}
+        />
+        <View style={styles.titleView}>
+          <Input
+            style={styles.titleinput}
+            value={catatanJudul}
+            onChangeText={(text) => this.handleValueChange(text, 'catatanJudul')}
+            placeholder="Title"
+          />
+          <Input
+            multiline={true}
+            numberOfLines={3}
+            style={styles.titleinput}
+            value={catatanDeskripsi}
+            onChangeText={(text) => this.handleValueChange(text, 'catatanDeskripsi')}
+            placeholder="Description"
+          />
+        </View>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.buttonStyle}
+          onPress={() => this.selectOneFile()}>
+          {/*Single file selection button*/}
+          <Text style={{ marginRight: 10, fontSize: 19, paddingTop: 10 }}>
+            Click here to pick file
+              </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={styles.imageIconStyle}
+          />
+        </TouchableOpacity>
+        <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+          <Button
+            title="Add reminder"
+            buttonStyle={{ width: 200, height: 40 }}
+            onPress={() => this.setReminder()}
+          />
+        </View>
+        <Overlay
+          style={{ flex: 1 }}
+          isVisible={this.state.isVisibleOverlay}
+          onBackdropPress={() => this.closeOverLay()}>
+          <View style={{ flexDirection: 'column' }}>
+            <Text style={{ margin: 20, fontSize: 20, fontWeight: '600' }}>{notifyData && notifyData.title}</Text>
+            <Text style={{ margin: 20, fontSize: 16 }}>{notifyData && notifyData.body}</Text>
+          </View>
+        </Overlay>
+        <DateTimePicker
+          isVisible={isDateTimePickerVisible}
+          onConfirm={this.handlePicked}
+          onCancel={this.closeDateTimePicker}
+          mode="datetime"
+          is24Hour={false}
+          date={new Date(notificationTime)}
+          titleIOS="Pick your Notification time"
+        />
+        {/* <Image
+          source={{ uri: singleFile.uri }}
+          style={{ width: 424, height: 278 }}
+        /> */}
+        <Mybutton title="Submit" customClick={() => this.register_catatan()} />
+      </SafeAreaView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
+    backgroundColor: '#EEEFF0',
   },
-  titleText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    paddingVertical: 20,
+  cardTitleView: {
+    paddingHorizontal: 15,
+    paddingTop: 15,
+    paddingBottom: 8,
   },
-  textStyle: {
-    backgroundColor: '#fff',
+  cardTitle: {
     fontSize: 15,
-    marginTop: 10,
-    color: 'black',
+    color: '#585858',
+    fontWeight: '600',
   },
-  buttonStyle: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#DDDDDD',
-    padding: 5,
+  titleStyle: {
+    fontSize: 20,
+    color: '#585858',
   },
-  imageIconStyle: {
-    height: 20,
-    width: 20,
-    resizeMode: 'stretch',
+  subtitleStyle: {
+    fontSize: 16,
+    color: '#585858',
   },
+  titleView: {
+    margin: 20,
+    backgroundColor: '#EEEFF0',
+  },
+  titleinput: {
+    fontSize: 20,
+    fontWeight: '600',
+    margin: 5,
+    backgroundColor: "#fff"
+  }
 });
+export default RegisterCatatan

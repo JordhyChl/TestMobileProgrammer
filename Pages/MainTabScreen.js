@@ -2,9 +2,9 @@ import React from 'react';
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-
+// import messaging from '@react-native-firebase/messaging';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, useEffect } from 'react-native';
 import HomeScreen from './HomeScreen';
 import DetailsScreen from './DetailsScreen';
 import ExploreScreen from './ExploreScreen';
@@ -18,11 +18,17 @@ import DeleteCatatan from './DeleteUser';
 import Mybutton from './components/Mybutton';
 // import NewContact from './Pages/NewContact';
 
+
+
 const HomeStack = createStackNavigator();
 const DetailsStack = createStackNavigator();
 const Stack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
+
+// messaging().onMessage(async remoteMessage => {
+//   Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+// });
 
 const MainTabScreen = () => (
   <Tab.Navigator
@@ -92,9 +98,12 @@ const HomeStackScreen = ({ navigation }) => (
       headerStyle: {
         backgroundColor: '#c24908', //Set Header color
       },
-      headerLeft: () => {
-        return null;
-      },
+      // headerLeft: () => {
+      //   return null;
+      // },
+      headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#c24908" onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
     }} />
     <Stack.Screen
       name="NewContact"
